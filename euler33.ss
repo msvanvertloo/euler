@@ -1,0 +1,27 @@
+(display
+    (let f [(num 10) (denom 11) (fractions '())]
+        (if (> num 99)
+            (apply * fractions)
+            (if (> denom 99)
+                (f (+ num 1) (+ num 2) fractions)
+                (let [(num-digits (map (lambda (x) (- (char->integer x) (char->integer #\0))) (string->list (number->string num)))) (denom-digits (map (lambda (x) (- (char->integer x) (char->integer #\0))) (string->list (number->string denom))))]
+                    (cond
+                        ((and (= (car num-digits) (car denom-digits)) (> (cadr denom-digits) 0))
+                            (if (= (/ num denom) (/ (cadr num-digits) (cadr denom-digits)))
+                                (f num (+ denom 1) (cons (/ num denom) fractions))
+                                (f num (+ denom 1) fractions)))
+                        ((and (= (car num-digits) (cadr denom-digits)) (> (car denom-digits) 0))
+                            (if (= (/ num denom) (/ (cadr num-digits) (car denom-digits)))
+                                (f num (+ denom 1) (cons (/ num denom) fractions))
+                                (f num (+ denom 1) fractions)))
+                        ((and (= (cadr num-digits) (car denom-digits)) (> (cadr denom-digits) 0))
+                            (if (= (/ num denom) (/ (car num-digits) (cadr denom-digits)))
+                                (f num (+ denom 1) (cons (/ num denom) fractions))
+                                (f num (+ denom 1) fractions)))
+                        ((and (= (cadr num-digits) (cadr denom-digits)) (> (cadr num-digits) 0) (> (car denom-digits) 0))
+                            (if (= (/ num denom) (/ (car num-digits) (car denom-digits)))
+                                (f num (+ denom 1) (cons (/ num denom) fractions))
+                                (f num (+ denom 1) fractions)))
+                        (else (f num (+ denom 1) fractions))))))))
+(display #\newline)
+(exit)
